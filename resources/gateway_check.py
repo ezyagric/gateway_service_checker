@@ -36,11 +36,54 @@ class Gateway(Resource):
                 req = requests.get(x)
                 
                 if req.status_code == 200:
-                    print("gateway: ",x," Is operational")
+                    data = req.json()
+                    if data['state'] == "Online":
+                        receivers = os.getenv('RECIEVERS')
+                    elif data['state'] == "Offline":
+                        receivers = os.getenv('RECIEVERS')
+                        senders = "sales@akorion.com"
+                        html_message = '''<html><body><p><font face="verdana" color="black">Hi Admin''' '''
+                                            <br>
+                                            <br>Attention!
+                                            <br>
+                                            <br>The below gateway
+                                            <br>
+                                            <br>Gateway URL: '''+ x + '''
+                                            <br>
+                                            <br>Is in the following state .'''+data['state']+'''
+                                            <br>
+                                            <br><i>Creating Endless farming possibilities:</i>
+                                            <br>
+                                            <br>Thanks for choosing EzyAgric
+                                            <br><br><br>EzyAgric TechTeam*</font></p></body>
+                                            </html>'''
+
+                        self.send_email(senders,receivers,'Your Production Gateway is offline','',html_message)
+                    else:
+                        receivers = os.getenv('RECIEVERS')
+                        senders = "sales@akorion.com"
+                        html_message = '''<html><body><p><font face="verdana" color="black">Hi Admin''' '''
+                                            <br>
+                                            <br>Attention!
+                                            <br>
+                                            <br>The below gateway
+                                            <br>
+                                            <br>Gateway URL: '''+ x + '''
+                                            <br>
+                                            <br>Is in the following state .'''+data['state']+'''
+                                            <br>
+                                            <br><i>Creating Endless farming possibilities:</i>
+                                            <br>
+                                            <br>Thanks for choosing EzyAgric
+                                            <br><br><br>EzyAgric TechTeam*</font></p></body>
+                                            </html>'''
+
+                        self.send_email(senders,receivers,'Your Production Gateway is offline','',html_message)
+                    # print("gateway: ",x," Is operational")
                     return {"message":'No action required'}
                 else:
-                    receivers = "roywasibani@ezyagric.com,roywaisibani@gmail.com,martinkatamba@gmail.com"
-                    senders = "info@akorion.com"
+                    receivers = os.getenv('RECIEVERS')
+                    senders = "sales@akorion.com"
                     html_message = '''<html><body><p><font face="verdana" color="black">Hi Admin''' '''
                                         <br>
                                         <br>Attention!
@@ -62,7 +105,7 @@ class Gateway(Resource):
 
             except requests.exceptions.RequestException as e:
                 # print(e)
-                receivers = "roywasibani@ezyagric.com,roywaisibani@gmail.com,martinkatamba@gmail.com"
+                receivers = os.getenv('RECIEVERS')
                 senders = "sales@akorion.com"
                 html_message = '''<html><body><p><font face="verdana" color="black">Hi Admin''' '''
                                     <br>
